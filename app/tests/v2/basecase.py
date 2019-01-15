@@ -78,7 +78,6 @@ class TestBaseCase(unittest.TestCase):
             "username": "testuser32",
             "password": "Test@19873"
         }
-
     def tearDown(self):
         self.client = None
         self.content_type = None
