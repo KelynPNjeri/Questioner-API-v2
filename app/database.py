@@ -3,10 +3,11 @@ import os
 
 from instance.config import APP_CONFIG
 
-def initialize_db(config_name):
+def initialize_db(config_name=None):
     """Creates Database Connection"""
     url = APP_CONFIG[config_name].DATABASE_URL
     connection = psycopg2.connect(url)
+    connection.autocommit = True
     return connection
     
 def create_tables():
@@ -18,9 +19,11 @@ def create_tables():
             lastname VARCHAR(20) NOT NULL,
             othername VARCHAR(20) NOT NULL,
             email VARCHAR UNIQUE NOT NULL,
-            phone_number VARCHAR(10) UNIQUE NOT NULL,
+            phone_number VARCHAR(10) NOT NULL,
             username VARCHAR(20) UNIQUE NOT NULL,
-            registered TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            password1 VARCHAR(20) NOT NULL,
+            password2 VARCHAR(20) NOT NULL,
+            registered VARCHAR NOT NULL,
             is_admin BOOLEAN NOT NULL DEFAULT FALSE
         );
     """
@@ -45,7 +48,7 @@ def create_tables():
             body VARCHAR NOT NULL,
             votes INT,
             FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
-            FOREIGN KEY (meetup_id) REFERENCES meetups(id) ON DELETE CASCADE,
+            FOREIGN KEY (meetup_id) REFERENCES meetups(id) ON DELETE CASCADE
         );
     """
     rsvp_table = """
@@ -59,10 +62,17 @@ def create_tables():
         );
     """
     table_queries = [user_table, meetup_table, question_table, rsvp_table]
-    development_stage = os.getenv("APP_SETTINGS")
-    conn = initialize_db(config_name=development_stage)
+    conn = initialize_db(config_name="development")
     for query in table_queries:
         cur = conn.cursor()
         cur.execute(query)
     conn.commit()
     conn.close()
+
+def drop_tables():
+    db = initialize_db(config_name="development")
+    cursor = db.cursor()
+    cursor.execute("DROP TABLE IF EXISTS users CASCADE")
+    cursor.execute("DROP TABLE IF EXISTS meetups CASCADE")
+    cursor.execute("DROP TABLE IF EXISTS questions CASCADE")
+    cursor.execute("DROP TABLE IF EXISTS rsvps CASCADE")
