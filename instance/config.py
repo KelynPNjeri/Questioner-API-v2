@@ -8,11 +8,13 @@ class Config():
 class DevelopmentConfig(Config):
     """Development Phase Configurations Class."""
     DEBUG = True
+    DATABASE_URL = os.getenv("DB_DEVELOPMENT_URL")
 
 class TestingConfig(Config):
     """Testing Phase Configurations Class."""
     DEBUG = True
     TESTING = True
+    DATABASE_URL = os.getenv("DB_TESTING_URL")
 
 class ProductionConfig(Config):
     """Production Phase Configurations Class."""

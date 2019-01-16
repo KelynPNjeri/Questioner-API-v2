@@ -11,7 +11,7 @@ def create_app(config_name):
     
     # Registering Blueprint
     from .api.v2 import version2 as v2
-    app.register_blueprint(v1)
+    app.register_blueprint(v2)
 
     # Adding Configurations.
     app.config.from_object(APP_CONFIG[config_name])
