@@ -1,5 +1,8 @@
 """Auth Views."""
+# Standard Library imports
 import json
+from datetime import datetime
+
 from flask import Response
 from flask_restplus import reqparse, Resource
 from werkzeug.exceptions import BadRequest, NotFound
@@ -20,6 +23,7 @@ parser.add_argument('phoneNumber', type=str, help="Fill in phone number.")
 parser.add_argument('username', type=str, help="Fill in username.")
 parser.add_argument('password1', type=str, help="Fill in password1.")
 parser.add_argument('password2', type=str, help="Fill in password2.")
+parser.add_argument('is_admin', type=str, help="Fill in is_admin field.")
 
 register_request_model = UserDataTransferObject.register_request_model
 
@@ -38,6 +42,7 @@ class RegisterUser(Resource):
         username = request_data["username"]
         password1 = request_data["password1"]
         password2 = request_data["password2"]
+        is_admin = request_data["is_admin"]
         # Validations
         validate_email = Validator.check_valid_email_address(self, email)
         matching_passwords = Validator.check_passwords_match(self, password1, password2)
@@ -47,27 +52,35 @@ class RegisterUser(Resource):
                 lastname=lastname,
                 othername=othername,
                 email=email,
-                phoneNumber=phone_number,
+                phone_number=phone_number,
                 username=username,
                 password1=password1,
-                password2=password2
+                password2=password2,
+                registered=str(datetime.now()),
+                is_admin=is_admin   
             )
-            check_payload = Validator.check_input_for_null_entry(register_payload)
+            check_payload = Validator.check_input_for_null_entry(data=register_payload)
             if check_payload:
-                register_user = AuthModel.save_data(self, db="users", data=register_payload)
-                response = Response(json.dumps(register_user), status=201, mimetype="application/json")
+                register_user = AuthModel.register_user(self, data=register_payload)
+                register_response = dict(
+                    status="201",
+                    status_message="Success",
+                    message="User registered successfully. Please Log in.",
+                    data=register_user
+                )
+                response = Response(json.dumps(register_response), status=201, mimetype="application/json")
                 return response
             error_payload = dict(
                 status=400,
-                error=check_payload,
-                message="Fields cannot be empty."
+                error="Null fields.",
+                message="Fields cannot be empty or spaces."
             )
             error_resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
             return error_resp
         error_payload = dict(
             status="400",
             error="Error with either your email or password",
-            message="Check password and email."
+            message="Enter correct email. Passwords must match."
         )
         error = BadRequest()
         error.data = error_payload
@@ -80,17 +93,21 @@ class LoginUser(Resource):
         request_data = parser.parse_args()
         username = request_data["username"]
         password = request_data["password1"]
-        login_payload = dict(
-            username=username,
-            password=password
-        )
-        login = {
-            "status": 200,
-            "message": "User Logged in successfully" 
-            
-        }
-        response = Response(json.dumps(login), status=200, mimetype="application/json")
-        return response
 
-    
-
+        check_existing = AuthModel.find_user_by_username(self, username=username)
+        if check_existing:
+            login = {
+                "status": 200,
+                "message": "User login successful."
+            }
+            response = Response(json.dumps(login), status=200, mimetype="application/json")
+            return response
+        else:
+            error_payload = dict(
+                status=404,
+                error="User does not exist.",
+                message="Please register user"
+            )
+            error = NotFound()
+            error.data = error_payload
+            raise error
