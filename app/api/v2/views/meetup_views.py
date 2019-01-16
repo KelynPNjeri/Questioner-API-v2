@@ -6,7 +6,7 @@ from flask_restplus import reqparse, Resource
 from werkzeug.exceptions import NotFound
 
 # Local Imports
-from ..models.meetup_model import Meetup
+from ..models.meetup_model import MeetupModel
 from ..utils.serializer import MeetupDataTransferObject
 
 meetup_api = MeetupDataTransferObject.meetup_namespace
