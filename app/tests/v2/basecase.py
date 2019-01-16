@@ -3,7 +3,7 @@ import unittest
 
 # Local Import
 from ... import create_app
-from ...database import create_all_tables,drop_all_tables
+from ...database import initialize_db, create_tables, drop_tables
 
 
 class TestBaseCase(unittest.TestCase):
@@ -11,8 +11,9 @@ class TestBaseCase(unittest.TestCase):
 
     def setUp(self):
         self.client = create_app(config_name="testing").test_client()
+        initialize_db(config_name="testing")
+        create_tables()
         self.content_type = "application/json"
-        create_all_tables()
         self.meetup_payload = {
             "location": "Nakuru",
             "image1": "www.google.com",
@@ -82,4 +83,4 @@ class TestBaseCase(unittest.TestCase):
         self.client = None
         self.content_type = None
         self.meetup_payload = None
-        drop_all_tables()
+        drop_tables()
