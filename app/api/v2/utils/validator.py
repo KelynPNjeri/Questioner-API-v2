@@ -2,28 +2,30 @@
     Validation Module
     Author: Kelyn Paul Njeri
 """
-import re 
+from flask_restplus import Namespace, fields
+import re
 
 class Validator:
     @staticmethod
     def check_input_for_null_entry(data):
-        for key, value in data.items():
-            if len(value) == 0:
-                return "Field cannot be blank."
-            elif value == " ":
-                return "Field cannot be a space."
+        for value in data.values():
+            return_value = True
+            if value is "" or value is " ":
+                return_value = False
+                break
             else:
-                return True
-
+                return_value = True
+        return return_value
+        
     def check_valid_email_address(self, email):
         email_pattern = re.compile(r"[^@]+@[^@]+\.[^@]+")
         if email_pattern.match(email):
             return True
         else:
-            return "{} not an email.".format(email)
+            return False
 
     def check_passwords_match(self, password1, password2):
         if password1 == password2:
             return True
         else:
-            return "Passwords do not match."
+            return False
