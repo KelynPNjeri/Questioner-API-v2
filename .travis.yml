@@ -19,6 +19,7 @@ script:
   - export APP_SETTINGS="testing"
   - export SECRET="mementomori"
   - export DB_TESTING_URL="dbname='test_questioner' user='kelyn' password='test_password'"
+  
   - pytest --cov-report term-missing --cov=app
   - coveralls
 
