@@ -3,14 +3,14 @@ import os
 
 from instance.config import APP_CONFIG
 
-
-
 def initialize_db(config_name):
+    """Creates Database Connection"""
     url = APP_CONFIG[config_name].DATABASE_URL
     connection = psycopg2.connect(url)
     return connection
     
 def create_tables():
+    """Creates tables"""
     user_table = """
         CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
