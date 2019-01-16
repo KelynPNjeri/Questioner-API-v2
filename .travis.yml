@@ -1,0 +1,31 @@
+language: python
+
+python:
+  - 3.6
+
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - pip install codecov
+
+services:
+  - postgresql
+
+before_script:
+- psql -c "create database test_questioner;" -U postgres
+- psql -c "create user kelyn WITH PASSWORD 'test_password';" -U postgres
+
+script: 
+  - export APP_SETTINGS="testing"
+  - export SECRET="mementomori"
+  - export DB_TESTING_URL="dbname='test_questioner' user='kelyn' password='test_password'"
+  
+  - pytest --cov-report term-missing --cov=app
+  - coveralls
+
+after_success:
+  - coveralls
+  - codecov --token=7fec7240-2625-4105-8b2f-f6fbc9022c25
+
+cache:
+  - pip

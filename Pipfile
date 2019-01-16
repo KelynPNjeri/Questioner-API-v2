@@ -17,6 +17,7 @@ coveralls = "*"
 codecov = "*"
 codeclimate-test-reporter = "*"
 ddt = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.6"
