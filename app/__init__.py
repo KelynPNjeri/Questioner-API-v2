@@ -9,7 +9,7 @@ from datetime import timedelta
 
 # Local Import
 from instance.config import APP_CONFIG
-from .database import create_tables, initialize_db
+from .database import create_tables, initialize_db, drop_tables
 
 def create_app(config_name):
     """Create App function."""
