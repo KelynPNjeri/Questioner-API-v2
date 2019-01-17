@@ -5,10 +5,11 @@ from datetime import datetime
 
 from flask import Response
 from flask_restplus import reqparse, Resource
+from flask_jwt_extended import create_access_token, create_refresh_token
 from werkzeug.exceptions import BadRequest, NotFound
 
 # Local Imports
-from ..models.auth_model import AuthModel
+from ..models.helper import AuthModel
 from ..utils.serializer import UserDataTransferObject
 from ..utils.validator import Validator
 
@@ -88,12 +89,14 @@ class RegisterUser(Resource):
 @auth_api.route('/login')
 class LoginUser(Resource):
     """User Login."""
+    login_parser = reqparse.RequestParser()
+    login_parser.add_argument('username', type=str, required=True, help="Enter username")
+    login_parser.add_argument('password', type=str, required=True, help="Enter password")
     def post(self):
         """Log In."""
-        request_data = parser.parse_args()
+        request_data = LoginUser().login_parser.parse_args()
         username = request_data["username"]
-        password = request_data["password1"]
-
+        password = request_data["password"]
         check_existing = AuthModel.find_user_by_username(self, username=username)
         if check_existing:
             login = {
