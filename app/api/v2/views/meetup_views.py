@@ -8,6 +8,7 @@ from werkzeug.exceptions import NotFound
 # Local Imports
 from ..models.meetup_model import MeetupModel
 from ..utils.serializer import MeetupDataTransferObject
+from ..utils.validator import Validator
 
 meetup_api = MeetupDataTransferObject.meetup_namespace
 
@@ -60,22 +61,31 @@ class MeetupList(Resource):
             description=description,
             tags=tags
         )
-        save_meetup = Meetup.save_data(self, db="meetups", data=meetup_payload)
-        response_payload = dict(
-            status=201,
-            message="Meetup was created successfully.",
-            data=save_meetup
-        )
-        response = Response(json.dumps(response_payload),
-                            status=201, mimetype="application/json")
-        return response
+        check_payload = Validator.check_input_for_null_entry(data=meetup_payload)
+        if check_payload:
+            save_meetup = MeetupModel.create_meetup(self, data=meetup_payload)
+            response_payload = dict(
+                status=201,
+                message="Meetup was created successfully.",
+                data=save_meetup
+            )
+            response = Response(json.dumps(response_payload),
+                                status=201, mimetype="application/json")
+            return response
+        error_payload = dict(
+                status=400,
+                error="Null fields.",
+                message="Fields cannot be empty or spaces."
+            )
+        error_resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
+        return error_resp
 
 
 @meetup_api.route('/upcoming')
 class GetMeetups(Resource):
     def get(self):
         """Fetching All Meetups"""
-        meetups = Meetup.fetch_all_meetups(self)
+        meetups = MeetupModel()
         response_payload = {
             "status": 200,
             "data": meetups
@@ -91,7 +101,7 @@ class SingleMeetup(Resource):
 
     def get(self, meetup_id):
         """Getting a specific meetup"""
-        meetup = Meetup.find_by_id(self, db="meetups", id=meetup_id)
+        meetup = MeetupModel()
         if meetup == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
