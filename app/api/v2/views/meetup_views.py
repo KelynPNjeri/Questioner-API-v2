@@ -85,7 +85,7 @@ class MeetupList(Resource):
 class GetMeetups(Resource):
     def get(self):
         """Fetching All Meetups"""
-        meetups = MeetupModel()
+        meetups = MeetupModel.get_upcoming_meetups(self)
         response_payload = {
             "status": 200,
             "data": meetups

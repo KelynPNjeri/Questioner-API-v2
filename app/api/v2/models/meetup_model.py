@@ -10,3 +10,8 @@ class MeetupModel():
         cursor.execute(query, data)
         db.commit()
         return data
+    def get_upcoming_meetups(self):
+        query = "SELECT json_agg(row_to_json((SELECT ColumnName FROM (SELECT id, created_on, location, images, topic, happening_on, description, tags) AS ColumnName (id, created_on, location, images, topic, happening_on, description, tags)))) AS JsonData FROM meetups;"
+        cursor.execute(query)
+        meetups = cursor.fetchall()
+        return meetups
