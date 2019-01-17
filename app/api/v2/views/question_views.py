@@ -8,6 +8,7 @@ from werkzeug.exceptions import NotFound
 # Local Imports.
 from ..models.question_model import QuestionModel
 from ..utils.serializer import QuestionDataTransferObject
+from ..utils.validator import Validator
 
 question_api = QuestionDataTransferObject.question_namespace
 
@@ -27,30 +28,38 @@ class QuestionList(Resource):
     def post(self):
         """POST request."""
         request_data = parser.parse_args()
-        user = request_data["user"]
-        meetup = request_data["meetup"]
+        created_by = request_data["user"]
+        meetup_id = request_data["meetup"]
         title = request_data["title"]
         body = request_data["body"]
         new_question = dict(
-            user=user,
-            meetup=meetup,
+            created_by=created_by,
+            meetup_id=meetup_id,
             title=title,
             body=body
         )
-        save_question = QuestionModel.create_question_record(
-            self, data=new_question)
-        response_payload = dict(
-            status=201,
-            message="Question was created successfully.",
-            data=save_question
-        )
-        response = Response(json.dumps(response_payload),
-                            status=201, mimetype="application/json")
-        return response
+        check_payload = Validator.check_input_for_null_entry(data=new_question)
+        if check_payload:
+            save_question = QuestionModel.create_question(self, data=new_question)
+            response_payload = dict(
+                status=201,
+                message="Question was created successfully.",
+                data=save_question
+            )
+            response = Response(json.dumps(response_payload),
+                                status=201, mimetype="application/json")
+            return response
+        error_payload = dict(
+                status=400,
+                error="Null fields.",
+                message="Fields cannot be empty or spaces."
+            )
+        error_resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
+        return error_resp
 
     def get(self):
         """Fetch All Questions."""
-        questions = QuestionModel.fetch_all_questions(self)
+        questions = QuestionModel()
         response_payload = {
             "status": 200,
             "data": questions
@@ -65,7 +74,7 @@ class SingleQuestions(Resource):
     """Deals with all operations on specific questions."""
 
     def get(self, question_id):
-        question = QuestionModel.fetch_specific_question(self, question_id)
+        question = QuestionModel()
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
@@ -91,7 +100,7 @@ class Upvote(Resource):
     """Deals with question upvote."""
 
     def patch(self, question_id):
-        question = QuestionModel.fetch_specific_question(self, question_id)
+        question = QuestionModel()
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
@@ -102,8 +111,7 @@ class Upvote(Resource):
             error.data = error_payload
             raise error
 
-        upvote_question = QuestionModel.upvote_question(
-            self, question=question)
+        upvote_question = QuestionModel()
         response_payload = {
             "status": 200,
             "data": upvote_question
@@ -118,7 +126,7 @@ class Downvote(Resource):
     """Deals with question downvote."""
 
     def patch(self, question_id):
-        question = QuestionModel.fetch_specific_question(self, question_id)
+        question = QuestionModel()
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
@@ -129,7 +137,7 @@ class Downvote(Resource):
             error.data = error_payload
             raise error
 
-        downvote_question = QuestionModel.downvote_question(self, question)
+        downvote_question = QuestionModel()
         response_payload = {
             "status": 200,
             "data": downvote_question

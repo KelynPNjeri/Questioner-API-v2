@@ -47,7 +47,7 @@ def create_tables():
             meetup_id INT NOT NULL,
             title VARCHAR NOT NULL,
             body VARCHAR NOT NULL,
-            votes INT,
+            votes INT DEFAULT 0,
             FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (meetup_id) REFERENCES meetups(id) ON DELETE CASCADE
         );
