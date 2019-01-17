@@ -9,9 +9,10 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 from werkzeug.exceptions import BadRequest, NotFound
 
 # Local Imports
-from ..models.helper import AuthModel
+from ..models.auth_model import AuthModel
 from ..utils.serializer import UserDataTransferObject
 from ..utils.validator import Validator
+from ..utils.helper import find_user_by_username
 
 auth_api = UserDataTransferObject.user_ns
 
@@ -97,7 +98,7 @@ class LoginUser(Resource):
         request_data = LoginUser().login_parser.parse_args()
         username = request_data["username"]
         password = request_data["password"]
-        check_existing = AuthModel.find_user_by_username(self, username=username)
+        check_existing = find_user_by_username(username=username)
         if check_existing:
             login = {
                 "status": 200,
