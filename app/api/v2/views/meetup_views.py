@@ -9,6 +9,7 @@ from werkzeug.exceptions import NotFound
 from ..models.meetup_model import MeetupModel
 from ..utils.serializer import MeetupDataTransferObject
 from ..utils.validator import Validator
+from ..utils.helper import find_meetup_by_id
 
 meetup_api = MeetupDataTransferObject.meetup_namespace
 
@@ -101,8 +102,8 @@ class SingleMeetup(Resource):
 
     def get(self, meetup_id):
         """Getting a specific meetup"""
-        meetup = MeetupModel()
-        if meetup == "Record doesn't exist.":
+        meetup = find_meetup_by_id(meetup_id=meetup_id)
+        if meetup == "Meetup doesn't exist.":
             error_payload = dict(
                 status=404,
                 error=meetup,
@@ -110,7 +111,7 @@ class SingleMeetup(Resource):
             )
             error = NotFound()
             error.data = error_payload
-            raise error
+            return error
         response_payload = {
             "status": 200,
             "data": meetup
