@@ -35,6 +35,7 @@ def create_tables():
             images VARCHAR ARRAY NOT NULL,
             topic VARCHAR NOT NULL,
             happening_on DATE NOT NULL,
+            description VARCHAR(200) NOT NULL,
             tags VARCHAR ARRAY NOT NULL
         );
     """
