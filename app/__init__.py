@@ -14,7 +14,7 @@ from .database import create_tables, initialize_db, drop_tables
 def create_app(config_name):
     """Create App function."""
     app = Flask(__name__, instance_relative_config=True)
-    initialize_db(config_name=config_name)
+    initialize_db()
     create_tables()
 
     manager = JWTManager(app=app)
