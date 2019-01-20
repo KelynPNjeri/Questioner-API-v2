@@ -1,15 +1,24 @@
 import psycopg2
 import os
 
-from instance.config import APP_CONFIG
 
-def initialize_db(config_name=None):
+def initialize_db():
     """Creates Database Connection"""
-    url = APP_CONFIG[config_name].DATABASE_URL
-    print(url)
-    connection = psycopg2.connect(url)
-    connection.autocommit = True
-    return connection
+    config = os.getenv("APP_SETTINGS")
+    try:
+        if config == "development":
+            db_url = os.getenv("DB_DEVELOPMENT_URL")
+            connection = psycopg2.connect(db_url)
+            connection.autocommit = True
+        elif config == "testing":
+            db_url = os.getenv("DB_TESTING_URL")
+            connection = psycopg2.connect(db_url)
+            connection.autocommit = True
+        return connection
+    except Exception as e:
+        return "{}, couldn't connect to database.".format(e)
+
+    
     
 def create_tables():
     """Creates tables"""
@@ -64,15 +73,15 @@ def create_tables():
         );
     """
     table_queries = [user_table, meetup_table, question_table, rsvp_table]
-    conn = initialize_db(config_name="development")
+    connection = initialize_db()
     for query in table_queries:
-        cur = conn.cursor()
+        cur = connection.cursor()
         cur.execute(query)
-    conn.commit()
-    conn.close()
+    connection.commit()
+    connection.close()
 
 def drop_tables():
-    db = initialize_db(config_name="development")
+    db = initialize_db()
     cursor = db.cursor()
     cursor.execute("DROP TABLE IF EXISTS users CASCADE")
     cursor.execute("DROP TABLE IF EXISTS meetups CASCADE")
