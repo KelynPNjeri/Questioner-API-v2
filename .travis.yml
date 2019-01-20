@@ -16,7 +16,7 @@ before_script:
 - psql -c "create user kelyn WITH PASSWORD 'test_password';" -U postgres
 
 script: 
-  - export APP_SETTINGS="testing"
+  - export APP_SETTINGS="development"
   - export SECRET="mementomori"
   - export DB_TESTING_URL="dbname='test_questioner' user='kelyn' password='test_password'"
   
