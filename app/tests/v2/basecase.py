@@ -8,10 +8,10 @@ from ...database import initialize_db, create_tables, drop_tables
 
 class TestBaseCase(unittest.TestCase):
     """Base Testing Class."""
-
     def setUp(self):
         self.client = create_app(config_name="testing").test_client()
-        initialize_db(config_name="testing")
+        # Initialize DB Connections.
+        initialize_db()
         create_tables()
         self.content_type = "application/json"
         self.meetup_payload = {
