@@ -1,6 +1,6 @@
 from ....database import initialize_db
 
-db = initialize_db(config_name="development")
+db = initialize_db()
 cursor = db.cursor()
 
 class QuestionModel():
