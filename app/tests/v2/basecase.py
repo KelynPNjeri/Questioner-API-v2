@@ -11,7 +11,7 @@ class TestBaseCase(unittest.TestCase):
 
     def setUp(self):
         self.client = create_app(config_name="testing").test_client()
-        initialize_db(config_name="testing")
+        initialize_db()
         create_tables()
         self.content_type = "application/json"
         self.meetup_payload = {
