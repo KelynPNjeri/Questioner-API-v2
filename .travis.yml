@@ -18,7 +18,7 @@ before_script:
 script: 
   - export APP_SETTINGS="development"
   - export SECRET="mementomori"
-  - export DB_TESTING_URL="dbname='test_questioner' user='kelyn' password='test_password'"
+  - export DB_TESTING_URL="postgresql://kelyn:test_password@localhost:5432/test_questioner"
   
   - pytest --cov-report term-missing --cov=app
   - coveralls
