@@ -6,6 +6,7 @@ from instance.config import APP_CONFIG
 def initialize_db(config_name=None):
     """Creates Database Connection"""
     url = APP_CONFIG[config_name].DATABASE_URL
+    print(url)
     connection = psycopg2.connect(url)
     connection.autocommit = True
     return connection
