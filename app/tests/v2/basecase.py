@@ -10,6 +10,7 @@ class TestBaseCase(unittest.TestCase):
     """Base Testing Class."""
     def setUp(self):
         self.client = create_app(config_name="testing").test_client()
+        # Initialize DB Connections.
         initialize_db()
         create_tables()
         self.content_type = "application/json"
