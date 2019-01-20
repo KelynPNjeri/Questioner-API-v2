@@ -1,6 +1,6 @@
 from ....database import initialize_db
 
-db = initialize_db(config_name="development")
+db = initialize_db()
 cursor = db.cursor()
 def find_user_by_email(email=None):
     query = "SELECT firstname, lastname, othername, email, phone_number, username FROM users WHERE email = '{}';".format(email)
