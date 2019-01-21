@@ -69,7 +69,8 @@ class TestBaseCase(unittest.TestCase):
             "phoneNumber": "0722997807",
             "username": "testuser",
             "password1": "Test@12345",
-            "password2": "Test@12345"
+            "password2": "Test@12345",
+            "is_admin": "False"
         }
         self.login_payload = {
             "username": "testuser",
