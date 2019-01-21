@@ -22,7 +22,7 @@ class TestAuthentication(base):
         response = self.client.post('/api/v2/auth/login', data=json.dumps(self.login_payload), content_type=self.content_type)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_data[0]["message"], "User login successful.")      
+        self.assertEqual(response_data["message"], "User login successful.")      
 
     def test_logging_in_non_existent_user(self):
         """Testing Logging in a non-existent user."""
