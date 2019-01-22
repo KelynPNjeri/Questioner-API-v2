@@ -52,7 +52,7 @@ def create_tables():
     question_table = """
         CREATE TABLE IF NOT EXISTS questions(
             id SERIAL PRIMARY KEY,
-            created_on VARCHAR,
+            created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             created_by INT NOT NULL,
             meetup_id INT NOT NULL,
             title VARCHAR NOT NULL,
