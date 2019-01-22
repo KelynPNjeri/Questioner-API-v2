@@ -103,7 +103,7 @@ class Upvote(Resource):
     """Deals with question upvote."""
 
     def patch(self, question_id):
-        question = QuestionModel()
+        question = find_question_by_id(question_id=question_id)
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
@@ -114,7 +114,7 @@ class Upvote(Resource):
             error.data = error_payload
             raise error
 
-        upvote_question = QuestionModel()
+        upvote_question = QuestionModel().upvote_question(question_id)
         response_payload = {
             "status": 200,
             "data": upvote_question
