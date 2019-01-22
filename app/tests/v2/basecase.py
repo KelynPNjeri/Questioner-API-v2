@@ -1,5 +1,6 @@
 """Base Case for all tests."""
 import unittest
+import json
 
 # Local Import
 from ... import create_app
@@ -44,7 +45,7 @@ class TestBaseCase(unittest.TestCase):
             "image2": "www.facebook.com",
             "image3": "www.pinterest.com",
             "topic": "Technical Growth",
-            "happening_on": "21/01/2019",
+            "happening_on": "2019-01-29",
             "description": "This is my event description.",
             "tag1": "Tech",
             "tag2": "Growth",
@@ -80,6 +81,10 @@ class TestBaseCase(unittest.TestCase):
             "username": "testuser32",
             "password": "Test@19873"
         }
+    def user_registration(self):
+        return self.client.post('/api/v2/auth/register', data=json.dumps(self.registration_payload), content_type=self.content_type)
+    def create_meetup(self):
+        return self.client.post('/api/v2/meetups', data=json.dumps(self.meetup_payload), content_type=self.content_type)
     def tearDown(self):
         self.client = None
         self.content_type = None
