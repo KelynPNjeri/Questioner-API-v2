@@ -52,7 +52,7 @@ class TestMeetup(base):
             post_response_data["message"], "Meetup was created successfully.")
         # Fetching Single Question.
         response = self.client.get(
-            'api/v2/meetups/{}'.format(post_response_data["data"][0]["id"]), content_type=self.content_type)
+            'api/v2/meetups/1', content_type=self.content_type)
         self.assertEqual(response.status_code, 200)
 
     @data( 10, 20, 30)
@@ -81,8 +81,7 @@ class TestMeetup(base):
         self.assertEqual(
             post_response_data["message"], "Meetup was created successfully.")
         # Posting RSVP.
-        response = self.client.post('/api/v2/meetups/{}/rsvps'.format(
-            post_response_data["data"][0]["id"]), data=json.dumps(self.rsvp_payload), content_type=self.content_type)
+        response = self.client.post('/api/v2/meetups/1/rsvps', data=json.dumps(self.rsvp_payload), content_type=self.content_type)
         self.assertEqual(response.status_code, 201)
 
     @data(20, 40, 50, 60)

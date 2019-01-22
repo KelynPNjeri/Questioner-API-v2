@@ -44,7 +44,7 @@ def create_tables():
             location VARCHAR NOT NULL,
             images VARCHAR ARRAY NOT NULL,
             topic VARCHAR NOT NULL,
-            happening_on DATE NOT NULL,
+            happening_on TIMESTAMP NOT NULL,
             description VARCHAR(200) NOT NULL,
             tags VARCHAR ARRAY NOT NULL
         );
