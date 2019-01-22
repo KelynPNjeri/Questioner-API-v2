@@ -129,7 +129,7 @@ class Downvote(Resource):
     """Deals with question downvote."""
 
     def patch(self, question_id):
-        question = QuestionModel()
+        question = find_question_by_id(question_id=question_id)
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
@@ -140,7 +140,7 @@ class Downvote(Resource):
             error.data = error_payload
             raise error
 
-        downvote_question = QuestionModel()
+        downvote_question = QuestionModel().downvote_question(question_id)
         response_payload = {
             "status": 200,
             "data": downvote_question
