@@ -1,6 +1,7 @@
 """Question Views Module."""
 # Third Party Imports.
 import json
+from datetime import datetime
 from flask_restplus import reqparse, Resource
 from flask import Response
 from werkzeug.exceptions import NotFound
@@ -33,6 +34,7 @@ class QuestionList(Resource):
         title = request_data["title"]
         body = request_data["body"]
         new_question = dict(
+            created_on=str(datetime.now()),
             created_by=created_by,
             meetup_id=meetup_id,
             title=title,
@@ -59,7 +61,7 @@ class QuestionList(Resource):
 
     def get(self):
         """Fetch All Questions."""
-        questions = QuestionModel()
+        questions = QuestionModel().retrieve_all_questions()
         response_payload = {
             "status": 200,
             "data": questions
