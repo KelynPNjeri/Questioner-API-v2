@@ -25,3 +25,10 @@ class QuestionModel():
         cursor.execute(query)
         question = find_question_by_id(question_id=question_id)
         return question
+
+    def downvote_question(self, question_id):
+        query = "UPDATE questions SET votes = votes - 1 WHERE id = '{}';".format(question_id)
+        cursor.execute(query)
+        question = find_question_by_id(question_id=question_id)
+        return question
+
