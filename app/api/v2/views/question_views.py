@@ -10,6 +10,7 @@ from werkzeug.exceptions import NotFound
 from ..models.question_model import QuestionModel
 from ..utils.serializer import QuestionDataTransferObject
 from ..utils.validator import Validator
+from ..utils.helper import find_question_by_id
 
 question_api = QuestionDataTransferObject.question_namespace
 
@@ -76,7 +77,7 @@ class SingleQuestions(Resource):
     """Deals with all operations on specific questions."""
 
     def get(self, question_id):
-        question = QuestionModel()
+        question = find_question_by_id(question_id=question_id)
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
