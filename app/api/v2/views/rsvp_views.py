@@ -28,16 +28,28 @@ class Rsvp(Resource):
         user_id = request_data["user"]
         meetup_id = request_data["meetup"]
         response = request_data["response"]
-            
-        created_rsvp = RsvpModel(user_id, meetup_id, response)
-        rsvp = created_rsvp.create_rsvp_record()
-        response_payload = {
-            "status": 201,
-            "data": rsvp
-        }
-        response = Response(json.dumps(response_payload), status=201, mimetype="application/json")
-        return response
-
+        acceptable_resp = ["yes", "no"]
+        validate_resp = [resp for resp in acceptable_resp if resp == response]
+        
+        if validate_resp:    
+            rsvp_payload = dict(
+                meetup_id=meetup_id,
+                user_id=user_id,
+                response=response
+            )
+            rsvp = RsvpModel().create_rsvp(data=rsvp_payload)
+            response_payload = {
+                "status": 201,
+                "data": rsvp
+            }
+            response = Response(json.dumps(response_payload), status=201, mimetype="application/json")
+            return response
+        error_payload = dict(
+            error="Invalid response input!",
+            msg="Please enter 'yes' or 'no' as a response."
+        )
+        resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
+        return resp
         
 
 
