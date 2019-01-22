@@ -31,3 +31,11 @@ def find_meetup_by_id(meetup_id=None):
         meetups["happening_on"] = str(meetups["happening_on"])
         return meetups
     return "Meetup doesn't exist."
+
+def find_question_by_id(question_id=None):
+    query = "SELECT * FROM questions WHERE id = '{}'".format(question_id)
+    cursor.execute(query)
+    question = cursor.fetchone()
+    if question:
+        return question
+    return "Record doesn't exist."
