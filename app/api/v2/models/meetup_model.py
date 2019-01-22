@@ -1,7 +1,8 @@
+from psycopg2.extras import RealDictCursor
 from ....database import initialize_db
 
 db = initialize_db()
-cursor = db.cursor()
+cursor = db.cursor(cursor_factory=RealDictCursor)
 class MeetupModel():
     """Deals with Meetup Operations."""
     def create_meetup(self, data=None):
@@ -11,7 +12,13 @@ class MeetupModel():
         db.commit()
         return data
     def get_upcoming_meetups(self):
-        query = "SELECT json_agg(row_to_json((SELECT ColumnName FROM (SELECT id, created_on, location, images, topic, happening_on, description, tags) AS ColumnName (id, created_on, location, images, topic, happening_on, description, tags)))) AS JsonData FROM meetups;"
+        query = "SELECT * FROM meetups;"
         cursor.execute(query)
         meetups = cursor.fetchall()
         return meetups
+
+    def delete_meetup(self, meetup_id):
+        query = "DELETE FROM meetups WHERE id = '{}';".format(meetup_id)
+        cursor.execute(query)
+        db.commit()
+        return "Meetup deleted successfully."
