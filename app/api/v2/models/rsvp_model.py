@@ -1,19 +1,15 @@
-class RsvpModel():
-    rsvps = []
-    def __init__(self, user_id, meetup_id, response):
-        self.id = len(self.rsvps) + 1
-        self.user = user_id
-        self.meetup = meetup_id
-        self.status = response
+from psycopg2.extras import RealDictCursor
+from ..utils.helper import find_question_by_id
+from ....database import initialize_db
 
-    def create_rsvp_record(self):
-        rsvp_payload = dict(
-            id=self.id,
-            user=self.user,
-            meetup=self.meetup,
-            status=self.status
-        )
-        self.rsvps.append(rsvp_payload)
-        return rsvp_payload
-        
-        
+db = initialize_db()
+cursor = db.cursor(cursor_factory=RealDictCursor)
+
+class RsvpModel():
+    """Deals with Questions Operations."""
+    def create_rsvp(self, data=None):
+        query = """
+        INSERT INTO rsvps (meetup_id, user_id, response) VALUES (%(meetup_id)s, %(user_id)s, %(response)s);"""
+        cursor.execute(query, data)
+        db.commit()
+        return data
