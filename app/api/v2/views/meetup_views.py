@@ -109,9 +109,8 @@ class SingleMeetup(Resource):
                 error=meetup,
                 message="Please enter a valid meetup id."
             )
-            error = NotFound()
-            error.data = error_payload
-            return error
+            response = Response(json.dumps(error_payload), status=404, mimetype="application/json")
+            return response
         response_payload = {
             "status": 200,
             "data": meetup
@@ -119,3 +118,24 @@ class SingleMeetup(Resource):
         response = Response(json.dumps(response_payload),
                             status=200, mimetype="application/json")
         return response
+    
+    def delete(self, meetup_id):
+        meetup = find_meetup_by_id(meetup_id=meetup_id)
+        if meetup == "Meetup doesn't exist.":
+            error_payload = dict(
+                status=404,
+                error=meetup,
+                message="Please enter a valid meetup id."
+            )
+            response = Response(json.dumps(error_payload), status=404, mimetype="application/json")
+            return response
+        delete_meetup = MeetupModel().delete_meetup(meetup_id)
+        response_payload = {
+            "status": 200,
+            "message": delete_meetup
+        }
+        response = Response(json.dumps(response_payload),
+                            status=200, mimetype="application/json")
+        return response
+        
+
