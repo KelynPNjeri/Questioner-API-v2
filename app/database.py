@@ -62,6 +62,16 @@ def create_tables():
             FOREIGN KEY (meetup_id) REFERENCES meetups(id) ON DELETE CASCADE
         );
     """
+    comment_table = """
+        CREATE TABLE IF NOT EXISTS comments(
+            id SERIAL PRIMARY KEY,
+            question_id INT NOT NULL,
+            title VARCHAR NOT NULL,
+            body VARCHAR NOT NULL,
+            commented_on VARCHAR,
+            FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+        );
+    """
     rsvp_table = """
         CREATE TABLE IF NOT EXISTS rsvps(
             id SERIAL PRIMARY KEY,
@@ -72,7 +82,7 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """
-    table_queries = [user_table, meetup_table, question_table, rsvp_table]
+    table_queries = [user_table, meetup_table, question_table, comment_table, rsvp_table]
     connection = initialize_db()
     for query in table_queries:
         cur = connection.cursor()

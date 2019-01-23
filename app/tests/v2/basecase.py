@@ -57,6 +57,11 @@ class TestBaseCase(unittest.TestCase):
             "title":  "Growing in tech?",
             "body":  "What is the main agenda of this meetup. Please clarify."
         }
+        self.comment_payload = {
+            "question_id":  1,
+            "title":  "Growing in tech?",
+            "body":  "What is the main agenda of this meetup. Please clarify."
+        }
         self.rsvp_payload = {
             "user": 1,
             "meetup": 1,
