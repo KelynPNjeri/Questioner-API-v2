@@ -46,6 +46,17 @@ class QuestionDataTransferObject():
         "body": fields.String(description="The question's description.")
 
     })
+class CommentDataTransferObject():
+    """Question Validators."""
+    comment_namespace = Namespace(
+        "Comment Endpoint",
+        description="Responsible for creating and fetching all comments."
+    )
+    comment_request_model = comment_namespace.model("Comment Request Model", {
+        "question_id": fields.Integer(description="The commented question's id."),
+        "title": fields.String(description="The comment's title."),
+        "body": fields.String(description="The comment's title."),
+    })
 
 class UserDataTransferObject():
     user_ns = Namespace("Authentication Endpoint", description="Responsible for registering and logging in users.")
