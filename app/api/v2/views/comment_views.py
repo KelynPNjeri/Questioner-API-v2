@@ -51,4 +51,11 @@ class CommentList(Resource):
         return error_resp
     
     def get(self):
-        pass
+        comments = CommentModel().fetch_all_comments()
+        response_payload = {
+            "status": 200,
+            "data": comments
+        }
+        response = Response(json.dumps(response_payload),
+                            status=200, mimetype="application/json")
+        return response

@@ -13,3 +13,9 @@ class CommentModel():
         cursor.execute(query, data)
         db.commit()
         return data
+    
+    def fetch_all_comments(self):
+        query = "SELECT * FROM comments;"
+        cursor.execute(query)
+        comments = cursor.fetchall()
+        return comments
