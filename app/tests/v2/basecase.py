@@ -90,6 +90,10 @@ class TestBaseCase(unittest.TestCase):
         return self.client.post('/api/v2/auth/register', data=json.dumps(self.registration_payload), content_type=self.content_type)
     def create_meetup(self):
         return self.client.post('/api/v2/meetups', data=json.dumps(self.meetup_payload), content_type=self.content_type)
+    
+    
+
+        
     def tearDown(self):
         self.client = None
         self.content_type = None
