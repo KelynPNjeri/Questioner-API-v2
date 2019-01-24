@@ -29,3 +29,11 @@ class Validator:
             return True
         else:
             return False
+    @staticmethod
+    def check_for_space(data):
+        error = None
+        for key, value in data.items():
+            if " " in value:
+                error = "{} cannot contain spaces.".format(key)
+        return error
+        
