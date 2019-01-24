@@ -17,17 +17,18 @@ from ..utils.helper import find_user_by_username
 auth_api = UserDataTransferObject.user_ns
 
 parser = reqparse.RequestParser()
-parser.add_argument('firstname', type=str, help="Fill in first name.")
-parser.add_argument('lastname', type=str, help="Fill in last name.")
-parser.add_argument('othername', type=str, help="Fill in other name.")
-parser.add_argument('email', type=str, help="Fill in email.")
-parser.add_argument('phoneNumber', type=str, help="Fill in phone number.")
-parser.add_argument('username', type=str, help="Fill in username.")
-parser.add_argument('password1', type=str, help="Fill in password1.")
-parser.add_argument('password2', type=str, help="Fill in password2.")
-parser.add_argument('is_admin', type=str, help="Fill in is_admin field.")
+parser.add_argument('firstname', type=str, required=True, help="Fill in first name.")
+parser.add_argument('lastname', type=str, required=True, help="Fill in last name.")
+parser.add_argument('othername', type=str, required=True, help="Fill in other name.")
+parser.add_argument('email', type=str, required=True, help="Fill in email.")
+parser.add_argument('phoneNumber', type=str, required=True, help="Fill in phone number.")
+parser.add_argument('username', type=str, required=True, help="Fill in username.")
+parser.add_argument('password1', type=str, required=True, help="Fill in password1.")
+parser.add_argument('password2', type=str, required=True, help="Fill in password2.")
+parser.add_argument('is_admin', type=str, required=True, help="Fill in is_admin field.")
 
 register_request_model = UserDataTransferObject.register_request_model
+login_request_model = UserDataTransferObject.login_request_model
 
 @auth_api.route("/register")
 class RegisterUser(Resource):
@@ -67,6 +68,8 @@ class RegisterUser(Resource):
                 register_response = dict(
                     status="201",
                     status_message="Success",
+                    auth_token=create_access_token(identity=username),
+                    refresh_token=create_refresh_token(identity=username),
                     message="User registered successfully. Please Log in.",
                     data=register_user
                 )
@@ -84,15 +87,15 @@ class RegisterUser(Resource):
             error="Error with either your email or password",
             message="Enter correct email. Passwords must match."
         )
-        error = BadRequest()
-        error.data = error_payload
-        raise error
+        resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
+        return resp
 @auth_api.route('/login')
 class LoginUser(Resource):
     """User Login."""
     login_parser = reqparse.RequestParser()
     login_parser.add_argument('username', type=str, required=True, help="Enter username")
     login_parser.add_argument('password', type=str, required=True, help="Enter password")
+    @auth_api.expect(login_request_model, validate=True)
     def post(self):
         """Log In."""
         request_data = LoginUser().login_parser.parse_args()
@@ -102,6 +105,7 @@ class LoginUser(Resource):
         if check_existing:
             login = {
                 "status": 200,
+                "auth_token": create_access_token(identity=username),
                 "message": "User login successful."
             }
             response = Response(json.dumps(login), status=200, mimetype="application/json")
@@ -112,6 +116,5 @@ class LoginUser(Resource):
                 error="User does not exist.",
                 message="Please register user"
             )
-            error = NotFound()
-            error.data = error_payload
-            raise error
+            resp = Response(json.dumps(error_payload), status=404, mimetype="application/json")
+            return resp

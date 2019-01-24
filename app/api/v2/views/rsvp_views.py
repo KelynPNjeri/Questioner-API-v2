@@ -3,6 +3,7 @@
 import json
 from flask import Response
 from flask_restplus import reqparse, Resource
+from flask_jwt_extended import jwt_required
 
 
 # Local Imports
