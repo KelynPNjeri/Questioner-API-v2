@@ -7,7 +7,7 @@ class MeetupModel():
     """Deals with Meetup Operations."""
     def create_meetup(self, data=None):
         query = """
-        INSERT INTO meetups (location, images, topic, happening_on, description, tags) VALUES (%(location)s, %(images)s, %(topic)s, %(happening_on)s, %(description)s, %(tags)s);"""
+        INSERT INTO meetups (created_on,location, images, topic, happening_on, description, tags) VALUES (%(created_on)s,%(location)s, %(images)s, %(topic)s, %(happening_on)s, %(description)s, %(tags)s);"""
         cursor.execute(query, data)
         db.commit()
         return data
