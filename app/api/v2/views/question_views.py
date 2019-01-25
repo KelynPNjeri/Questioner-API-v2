@@ -119,7 +119,7 @@ class Upvote(Resource):
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
-                error="Question does not exist.",
+                error="Question of id {} doesn't exist.".format(question_id),
                 message="Please enter a valid question id"
             )
             resp = Response(json.dumps(error_payload), status=404, mimetype="application/json")
@@ -159,7 +159,7 @@ class Downvote(Resource):
         if question == "Record doesn't exist.":
             error_payload = dict(
                 status=404,
-                error="Invalid question id",
+                error="Question of id {} doesn't exist.".format(question_id),
                 message="Please enter a valid question id"
             )
             resp = Response(json.dumps(error_payload), status=404, mimetype="application/json")

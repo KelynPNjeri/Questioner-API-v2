@@ -25,7 +25,6 @@ parser.add_argument('phoneNumber', type=str, required=True, help="Fill in phone 
 parser.add_argument('username', type=str, required=True, help="Fill in username.")
 parser.add_argument('password1', type=str, required=True, help="Fill in password1.")
 parser.add_argument('password2', type=str, required=True, help="Fill in password2.")
-parser.add_argument('is_admin', type=str, required=True, help="Fill in is_admin field.")
 
 register_request_model = UserDataTransferObject.register_request_model
 login_request_model = UserDataTransferObject.login_request_model
@@ -45,7 +44,6 @@ class RegisterUser(Resource):
         username = request_data["username"]
         password1 = request_data["password1"]
         password2 = request_data["password2"]
-        is_admin = request_data["is_admin"]
         # Validations
         validate_email = Validator.check_valid_email_address(self, email)
         matching_passwords = Validator.check_passwords_match(self, password1, password2)
@@ -59,8 +57,7 @@ class RegisterUser(Resource):
                 username=username,
                 password1=password1,
                 password2=password2,
-                registered=str(datetime.now()),
-                is_admin=is_admin   
+                registered=str(datetime.now())
             )
             check_payload = Validator.check_input_for_null_entry(data=register_payload)
             if check_payload:

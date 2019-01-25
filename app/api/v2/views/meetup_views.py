@@ -1,10 +1,10 @@
 """Meetup Views Module"""
 # Third Party Imports.
 import json
+from datetime import datetime
 from flask import Response
 from flask_restplus import reqparse, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from werkzeug.exceptions import NotFound
 
 # Local Imports
 from ..models.meetup_model import MeetupModel
@@ -19,8 +19,6 @@ parser = reqparse.RequestParser()
 parser.add_argument("location", type=str, required=True,
                     help="Please enter meetup location.")
 parser.add_argument("images", required=True, help="Please enter meetup image.", action="append")
-# parser.add_argument("image2", help="Please enter meetup image.")
-# parser.add_argument("image3", help="Please enter meetup image.")
 parser.add_argument("topic", type=str, required=True,
                     help="Please enter meetup topic.")
 parser.add_argument("happening_on", type=str, required=True,
@@ -28,8 +26,6 @@ parser.add_argument("happening_on", type=str, required=True,
 parser.add_argument("description", type=str, required=True,
                     help="Please add a meetup description.")
 parser.add_argument("tags", required=True, help="Please enter meetup tag.", action="append")
-# parser.add_argument("tag2", required=True, help="Please enter meetup tag.")
-# parser.add_argument("tag3", required=True, help="Please enter meetup tag.")
 
 meetup_request_model = MeetupDataTransferObject.meetup_request_model
 
@@ -46,19 +42,12 @@ class MeetupList(Resource):
         request_data = parser.parse_args()
         location = request_data["location"]
         images = request_data["images"]
-        # image2 = request_data["image2"]
-        # image3 = request_data["image3"]
         topic = request_data["topic"]
         happening_on = request_data["happening_on"]
         description = request_data["description"]
         tags = request_data["tags"]
-        # tag2 = request_data["tag2"]
-        # tag3 = request_data["tag3"]
-
-        # images = [image1, image2, image3]
-        # tags = [tag1, tag2, tag3]
-
         meetup_payload = dict(
+            created_on=str(datetime.now()),
             location=location,
             images=images,
             topic=topic,
