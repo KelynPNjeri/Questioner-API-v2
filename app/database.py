@@ -40,11 +40,11 @@ def create_tables():
     meetup_table = """
         CREATE TABLE IF NOT EXISTS meetups(
             id SERIAL PRIMARY KEY,
-            created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            created_on VARCHAR,
             location VARCHAR NOT NULL,
             images VARCHAR ARRAY NOT NULL,
             topic VARCHAR NOT NULL,
-            happening_on TIMESTAMP NOT NULL,
+            happening_on VARCHAR NOT NULL,
             description VARCHAR(200) NOT NULL,
             tags VARCHAR ARRAY NOT NULL
         );
@@ -90,7 +90,12 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """
-    table_queries = [user_table, meetup_table, question_table, votes_table, comment_table, rsvp_table]
+    add_citext = """CREATE EXTENSION IF NOT EXISTS citext;"""
+    apply_citext = """ALTER TABLE users ALTER COLUMN username TYPE citext, ALTER COLUMN email TYPE citext;"""
+
+    # super_admin = """
+    #     INSERT INTO users (firstname, lastname, othername, email, phone_number, username, password1, password2, registered, is_admin) VALUES ('Draco', 'Trevor', 'David', 'adminemail@gmail.com', '0799688444', 'superadmin', 'pass1', 'pass2',25-01-2019, 'True');"""
+    table_queries = [user_table, meetup_table, question_table, votes_table, comment_table, rsvp_table, add_citext, apply_citext]
     connection = initialize_db()
     for query in table_queries:
         cur = connection.cursor()
