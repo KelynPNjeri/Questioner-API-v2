@@ -11,8 +11,8 @@ def find_user_by_email(email=None):
     cursor.execute(query)
     user = cursor.fetchone()
     if user:
-        return "User already exists."
-    return "User does not exist."
+        return True
+    return False
 
 def find_user_by_username(username=None):
     query = "SELECT * FROM users WHERE username = '{}';".format(username)

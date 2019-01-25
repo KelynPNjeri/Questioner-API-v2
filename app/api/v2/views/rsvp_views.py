@@ -24,7 +24,7 @@ rsvp_request_model = RsvpDataTransferObject.rsvp_request_model
 class Rsvp(Resource):
     @rsvp_api.expect(rsvp_request_model, validate=True)
     def post(self, meetup_id):
-        """Creating an RSVP to an event."""
+        """Creating an RSVP to an event.""" 
         request_data = parser.parse_args()
         user_id = request_data["user"]
         meetup_id = request_data["meetup"]

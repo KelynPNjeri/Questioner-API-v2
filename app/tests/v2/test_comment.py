@@ -8,16 +8,7 @@ class TestComment(base):
     """Testing the Question Endpoints with valid input."""
 
     def setUp(self):
-        super().setUp()
-        
-
-    def login_user(self):
-        register = self.client.post('/api/v2/auth/register', data=json.dumps(self.registration_payload), content_type=self.content_type)
-        user_login = self.client.post('/api/v2/auth/login', data=json.dumps(self.login_payload), content_type=self.content_type)
-        login_data = json.loads(user_login.data.decode('utf-8'))
-        token = login_data['auth_token']
-        return token
-      
+        base.setUp(self)
 
     def test_create_comment(self):
         """Testing Creation of a Comment."""

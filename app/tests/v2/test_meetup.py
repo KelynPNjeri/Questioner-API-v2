@@ -10,14 +10,14 @@ class TestMeetup(base):
     """Testing the Meetup Endpoints with valid input."""
 
     def setUp(self):
-        base.setUp(self)
+       base.setUp(self)
 
     def test_create_meetup(self):
         """Testing Creation of a Meetup."""
 
         response = self.client.post(
             "/api/v2/meetups",
-            data=json.dumps(self.meetup_payload),
+            data=json.dumps(self.meetup_payload), headers=dict(Authorization="Bearer " + self.header),
             content_type=self.content_type,
         )
         response_data = json.loads(response.data.decode())
@@ -29,7 +29,7 @@ class TestMeetup(base):
         """Testing Fetching of all meetups."""
         post_response = self.client.post(
             "/api/v2/meetups",
-            data=json.dumps(self.meetup_payload),
+            data=json.dumps(self.meetup_payload), headers=dict(Authorization="Bearer "+ self.header),
             content_type=self.content_type
         )
         post_response_data = json.loads(post_response.data.decode())
@@ -38,21 +38,21 @@ class TestMeetup(base):
             post_response_data["message"], "Meetup was created successfully."
         )
         response = self.client.get(
-            "/api/v2/meetups/upcoming", content_type=self.content_type)
+            "/api/v2/meetups/upcoming", headers=dict(Authorization="Bearer "+ self.header),content_type=self.content_type)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response_data["status"], 200)
 
     def test_fetch_single_meetup(self):
         """Test fetching a single meetup."""
         post_response = self.client.post(
-            '/api/v2/meetups', data=json.dumps(self.meetup_payload_2), content_type=self.content_type)
+            '/api/v2/meetups', headers=dict(Authorization="Bearer "+ self.header),data=json.dumps(self.meetup_payload_2), content_type=self.content_type)
         post_response_data = json.loads(post_response.data.decode())
         self.assertEqual(post_response.status_code, 201)
         self.assertEqual(
             post_response_data["message"], "Meetup was created successfully.")
         # Fetching Single Question.
         response = self.client.get(
-            'api/v2/meetups/1', content_type=self.content_type)
+            'api/v2/meetups/1', headers=dict(Authorization="Bearer "+ self.header), content_type=self.content_type)
         self.assertEqual(response.status_code, 200)
 
     @data( 10, 20, 30)

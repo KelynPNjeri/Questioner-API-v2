@@ -35,5 +35,21 @@ class Validator:
         for key, value in data.items():
             if " " in value:
                 error = "{} cannot contain spaces.".format(key)
-        return error
+        return True
+    @staticmethod
+    def check_password(password):
+        if (len(password) < 6) or (len(password) > 12):
+            return "Invalid Password"
+        elif not re.search("[A-Z]", password):
+            return "Invalid Password"
+        elif not re.search("[a-z]", password):
+            return "Invalid Password"
+        elif not re.search("[0-9]", password):
+            return "Invalid Password"
+        elif not re.search(r"[^\w\*]", password):
+            return "Invalid Password"
+        elif not re.search(r"[^\s]", password):
+            return "Invalid Password"
+        else:
+            return "Valid Password"
         

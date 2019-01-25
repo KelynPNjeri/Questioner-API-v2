@@ -15,6 +15,7 @@ class TestBaseCase(unittest.TestCase):
         initialize_db()
         create_tables()
         self.content_type = "application/json"
+        self.header = self.login_user()
         self.meetup_payload = {
             "location": "Nakuru",
             "image1": "www.google.com",
@@ -88,6 +89,14 @@ class TestBaseCase(unittest.TestCase):
         }
     def user_registration(self):
         return self.client.post('/api/v2/auth/register', data=json.dumps(self.registration_payload), content_type=self.content_type)
+    
+    def login_user(self):
+        register = self.client.post('/api/v2/auth/register', data=json.dumps(self.registration_payload), content_type=self.content_type)
+        user_login = self.client.post('/api/v2/auth/login', data=json.dumps(self.login_payload), content_type=self.content_type)
+        login_data = json.loads(user_login.data.decode('utf-8'))
+        token = login_data['auth_token']
+        return token
+      
     def create_meetup(self):
         return self.client.post('/api/v2/meetups', data=json.dumps(self.meetup_payload), content_type=self.content_type)
     

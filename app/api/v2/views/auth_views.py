@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from ..models.auth_model import AuthModel
 from ..utils.serializer import UserDataTransferObject
 from ..utils.validator import Validator
-from ..utils.helper import find_user_by_username
+from ..utils.helper import find_user_by_username, find_user_by_email
 
 auth_api = UserDataTransferObject.user_ns
 
@@ -32,6 +32,7 @@ login_request_model = UserDataTransferObject.login_request_model
 @auth_api.route("/register")
 class RegisterUser(Resource):
     """User Registration"""
+    
     @auth_api.expect(register_request_model, validate=True)
     def post(self):
         """Registering a User"""
@@ -47,18 +48,28 @@ class RegisterUser(Resource):
         # Validations
         validate_email = Validator.check_valid_email_address(self, email)
         matching_passwords = Validator.check_passwords_match(self, password1, password2)
-        if validate_email and matching_passwords:
-            register_payload = dict(
-                firstname=firstname,
-                lastname=lastname,
-                othername=othername,
-                email=email,
-                phone_number=phone_number,
-                username=username,
-                password1=password1,
-                password2=password2,
-                registered=str(datetime.now())
+        check_email_existence = find_user_by_email(email=email)
+        check_username_existence = find_user_by_username(username=username)
+        register_payload = dict(
+            firstname=firstname,
+            lastname=lastname,
+            othername=othername,
+            email=email,
+            phone_number=phone_number,
+            username=username,
+            password1=password1,
+            password2=password2,
+            registered=str(datetime.now())
+        )
+        if check_email_existence or check_username_existence:
+            error = dict(
+                error="User already exists.",
+                message="Please log in instead."
             )
+            resp = Response(json.dumps(error), status=409, mimetype="application/json")
+            return resp
+        if validate_email and matching_passwords:
+            
             check_payload = Validator.check_input_for_null_entry(data=register_payload)
             if check_payload:
                 register_user = AuthModel.register_user(self, data=register_payload)

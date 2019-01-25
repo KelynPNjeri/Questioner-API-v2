@@ -20,6 +20,8 @@ comment_request_model = CommentDataTransferObject.comment_request_model
 
 @comment_api.route('')
 class CommentList(Resource):
+    docs = "This posts a comment."
+    @comment_api.doc(docs, security="apikey")
     @jwt_required
     def post(self):
         request_data = parser.parse_args()
@@ -51,6 +53,10 @@ class CommentList(Resource):
             )
         error_resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
         return error_resp
+
+    docs = "This gets all comments posted to a question."
+    @comment_api.doc(docs, security="apikey")
+    @comment_api.marshal_with(comment_request_model)
     @jwt_required
     def get(self):
         comments = CommentModel().fetch_all_comments()
