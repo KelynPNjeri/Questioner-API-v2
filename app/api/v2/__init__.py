@@ -13,8 +13,15 @@ from .views.comment_views import comment_api
 
 version2 = Blueprint('Questioner version 2', __name__, url_prefix="/api/v2")
 
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }}
+
 api = Api(version2, version="2.0", title="Questioner REST API",
-          description="This is backend of the Questioner Web app.", doc="/documentation")
+          description="This is backend of the Questioner Web app.", doc="/documentation", authorizations=authorizations)
 
 api.add_namespace(meetup_api, path="/meetups")
 api.add_namespace(question_api, path="/questions")

@@ -22,6 +22,20 @@ def find_user_by_username(username=None):
         return True
     return False
 
+def check_for_votes(question_id=None, username=None, action=None):
+    query = "SELECT * FROM votes WHERE question_id = '{}' AND username = '{}' AND action = '{}';".format(question_id, username, action)
+    cursor.execute(query)
+    vote_details = cursor.fetchone()
+    if vote_details:
+        return True
+    return False
+
+def save_vote(data=None):
+    query = """
+        INSERT INTO votes (question_id, username, action) VALUES (%(question_id)s, %(username)s, %(action)s);"""
+    cursor.execute(query, data)
+    db.commit()
+
 def find_meetup_by_id(meetup_id=None):
     query = "SELECT * FROM meetups WHERE id = '{}';".format(meetup_id)
     cursor.execute(query)
@@ -39,3 +53,11 @@ def find_question_by_id(question_id=None):
     if question:
         return question
     return "Record doesn't exist."
+
+def check_if_admin(username=None):
+    query = "SELECT is_admin FROM users WHERE username = '{}';".format(username)
+    cursor.execute(query)
+    admin = cursor.fetchone()
+    if admin is True:
+        return True
+    return False

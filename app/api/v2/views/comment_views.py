@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 from flask_restplus import reqparse, Resource
+from flask_jwt_extended import jwt_required
 from flask import Response
 
 # Local Imports.
@@ -19,6 +20,7 @@ comment_request_model = CommentDataTransferObject.comment_request_model
 
 @comment_api.route('')
 class CommentList(Resource):
+    @jwt_required
     def post(self):
         request_data = parser.parse_args()
         question_id = request_data["question_id"]
@@ -49,7 +51,7 @@ class CommentList(Resource):
             )
         error_resp = Response(json.dumps(error_payload), status=400, mimetype="application/json")
         return error_resp
-    
+    @jwt_required
     def get(self):
         comments = CommentModel().fetch_all_comments()
         response_payload = {

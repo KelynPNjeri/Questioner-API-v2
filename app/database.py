@@ -62,6 +62,14 @@ def create_tables():
             FOREIGN KEY (meetup_id) REFERENCES meetups(id) ON DELETE CASCADE
         );
     """
+    votes_table = """
+        CREATE TABLE IF NOT EXISTS votes(
+            question_id INT,
+            username VARCHAR,
+            action VARCHAR,
+            FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+        );
+    """
     comment_table = """
         CREATE TABLE IF NOT EXISTS comments(
             id SERIAL PRIMARY KEY,
@@ -82,7 +90,7 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
     """
-    table_queries = [user_table, meetup_table, question_table, comment_table, rsvp_table]
+    table_queries = [user_table, meetup_table, question_table, votes_table, comment_table, rsvp_table]
     connection = initialize_db()
     for query in table_queries:
         cur = connection.cursor()
@@ -96,4 +104,6 @@ def drop_tables():
     cursor.execute("DROP TABLE IF EXISTS users CASCADE")
     cursor.execute("DROP TABLE IF EXISTS meetups CASCADE")
     cursor.execute("DROP TABLE IF EXISTS questions CASCADE")
+    cursor.execute("DROP TABLE IF EXISTS votes CASCADE")
+    cursor.execute("DROP TABLE IF EXISTS comments CASCADE")
     cursor.execute("DROP TABLE IF EXISTS rsvps CASCADE")
