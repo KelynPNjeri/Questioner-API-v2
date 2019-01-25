@@ -28,6 +28,26 @@ def create_app(config_name):
     manager = JWTManager(app=app)
 
     # API Error Handlers.
+    @app.errorhandler(400)
+    def bad_request_handler(message):
+        payload = dict(
+            status=400,
+            error="Bad request",
+            message="Check you inputs"
+        )
+        resp = Response(json.dumps(payload), status=400, mimetype="application/json")
+        return resp
+
+    @app.errorhandler(404)
+    def not_found(message):
+        payload = dict(
+            status=404,
+            error="Entered URL doesn't exist.",
+            message="Check if the URL entered is correct."
+        )
+        resp = Response(json.dumps(payload), status=404, mimetype="application/json")
+        return resp
+
     
     # JWT Error Handlers.
     @manager.token_in_blacklist_loader
