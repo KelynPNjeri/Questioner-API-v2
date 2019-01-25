@@ -7,7 +7,7 @@ def initialize_db():
     config = os.getenv("APP_SETTINGS")
     try:
         if config == "development":
-            db_url = os.getenv("DB_DEVELOPMENT_URL")
+            db_url = os.getenv("DATABASE_URL")
             connection = psycopg2.connect(db_url)
             connection.autocommit = True
         elif config == "testing":
