@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/KelynPNjeri/Questioner-API-v2.svg?branch=develop)](https://travis-ci.com/KelynPNjeri/Questioner-API-v2)       [![Maintainability](https://api.codeclimate.com/v1/badges/16c431ceeaa710544007/maintainability)](https://codeclimate.com/github/KelynPNjeri/Questioner-API-v2/maintainability)        [![Coverage Status](https://coveralls.io/repos/github/KelynPNjeri/Questioner-API-v2/badge.svg?branch=develop)](https://coveralls.io/github/KelynPNjeri/Questioner-API-v2?branch=develop)      [![BCH compliance](https://bettercodehub.com/edge/badge/KelynPNjeri/Questioner-API-v2?branch=develop)](https://bettercodehub.com/)      [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![BCH compliance](https://bettercodehub.com/edge/badge/KelynPNjeri/Questioner-API-v2?branch=develop)](https://bettercodehub.com/)      [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Questioner API(Version 2)
 Questioner web app, is an online platform that crowd-sources questions from users about meetups.
 
